@@ -220,7 +220,7 @@ class App {
     );
     formError.addEventListener('animationend', function () {
       formError.style.animation = '';
-      console.log('smth-1');
+      // console.log('smth-1');
     });
 
     // Weather informations handler
@@ -320,7 +320,7 @@ class App {
       // if (!data.ok) throw new Error(`Problem with geocoding - ${data.status}`);
 
       const dataJson = await data.json();
-      console.log(dataJson);
+      // console.log(dataJson);
       if (dataJson.error)
         throw new Error(
           `${dataJson.error.message}Error ${dataJson.error.code}`
@@ -461,7 +461,7 @@ class App {
     form.classList.add('hidden');
   }
   _toggleElevationField() {
-    console.log('entered elevation field');
+    // console.log('entered elevation field');
     this._resetValuesForm(inputType.value);
     this._resetFormErrors();
     this._resetTotalFormErrors();
@@ -469,14 +469,14 @@ class App {
     inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
   }
   validInputs(...inputs) {
-    console.log(inputs);
+    // console.log(inputs);
     return inputs.every(inp => Number.isFinite(+inp));
   }
   allPozitive(...inputs) {
     return inputs.every(inp => inp > 0);
   }
   validationInputs() {
-    console.log(this.#totalFormErrors);
+    // console.log(this.#totalFormErrors);
 
     if (Object.values(this.#totalFormErrors).some(error => error === 1)) {
       return false;
@@ -489,7 +489,7 @@ class App {
         } else return sum;
       }, 0) === 3
     ) {
-      console.log('entered particular error');
+      // console.log('entered particular error');
 
       if (formError.classList.contains('visible')) {
         // formError.classList.remove('animate-slide-in');
@@ -548,11 +548,11 @@ class App {
         }
         formError.style.animation = 'slide-up-down 0.2s linear ';
 
-        console.log(formError.style.animationPlayState);
+        // console.log(formError.style.animationPlayState);
 
         return;
       }
-      console.log(this.#totalFormErrors);
+      // console.log(this.#totalFormErrors);
       workout = new Running(
         [lat, lng],
         weatherObj.location.region,
@@ -594,7 +594,7 @@ class App {
       );
     }
 
-    console.log('Entered submit');
+    // console.log('Entered submit');
     this._resetTotalFormErrors.bind(this)();
 
     //Add new workout to object list
@@ -627,7 +627,7 @@ class App {
         }
         formError.style.animation = 'slide-up-down 0.2s linear ';
 
-        console.log(formError.style.animationPlayState);
+        // console.log(formError.style.animationPlayState);
 
         return;
       }
@@ -637,11 +637,11 @@ class App {
       this.#currentWorkoutObj.cadence = inputCadence.value;
       this.#currentWorkoutObj.calcPace();
 
-      console.log(
-        this.#currentWorkoutObj.distance,
-        this.#currentWorkoutObj.duration,
-        this.#currentWorkoutObj.cadence
-      );
+      // console.log(
+      //   this.#currentWorkoutObj.distance,
+      //   this.#currentWorkoutObj.duration,
+      //   this.#currentWorkoutObj.cadence
+      // );
     }
     if (this.#currentWorkoutObj.type === 'cycling') {
       if (!this.validationInputs()) {
@@ -937,7 +937,7 @@ class App {
 
     const functionalityWorkout = function (e) {
       const workout = e.target.closest('.workout');
-      console.log(e.target);
+      // console.log(e.target);
       if (e.target.classList.contains('workout__btn--maximize')) {
         workout.classList.toggle('maximized');
         const workoutWeather = workout.querySelector('.workout__weather');
@@ -1104,7 +1104,7 @@ class App {
 
     if (x.name === 'Elevation') value = Math.abs(value);
     if (!Number.isFinite(value) || value <= 0) {
-      console.log(x.id + 'Error');
+      // console.log(x.id + 'Error');
       errorMsg.classList.remove('display-none');
       setTimeout(() => {
         errorMsg.classList.add('active');
