@@ -320,6 +320,7 @@ class App {
       // if (!data.ok) throw new Error(`Problem with geocoding - ${data.status}`);
 
       const dataJson = await data.json();
+      console.log(dataJson);
       if (dataJson.error)
         throw new Error(
           `${dataJson.error.message}Error ${dataJson.error.code}`
