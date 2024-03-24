@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,700;1,400;1,500;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="shortcut icon" type="image/png" href="/favicon.ico" />
+    <link rel="icon" type="image/png" href="/favicon.ico" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+
+    <link rel="stylesheet" href="style.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      defer
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://unpkg.com/@geoapify/geocoder-autocomplete@^1/styles/round-borders-dark.css"
+    />
+    <script
+      defer
+      src="https://unpkg.com/@geoapify/geocoder-autocomplete@^1/dist/index.min.js"
+    ></script>
+
+    <script defer src="script.js"></script>
+    <!-- <script defer src="other.js"></script> -->
+    <!-- Script.js has access to all the global variables in the other.js, so order matters -->
+
+    <title>mapty // Map your workouts</title>
+  </head>
+  <body>
+    <main>
+      <div class="modal-error display-none">
+        <button class="close-modal">&times;</button>
+        <p class="modal-error__title">Something went wrong 📛</p>
+        <p class="modal-error__message">
+          <!-- Error processing workout location
+          <span class="modal-error__message__code">error 404</span>. Make sure
+          to pick a location where you want to record your workout. -->
+        </p>
+      </div>
+      <div class="overlay display-none"></div>
+      <nav class="options-bar">
+        <button class="moving-button">
+          <div class="svg-img">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+              <path
+                fill="#2d3439"
+                fill-opacity="1"
+                d="M0,128L60,128C120,128,240,128,360,154.7C480,181,600,235,720,229.3C840,224,960,160,1080,133.3C1200,107,1320,117,1380,122.7L1440,128L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"
+              ></path>
+            </svg>
+          </div>
+          <span class="arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path
+                d="M16.924 9.617A1 1 0 0 0 16 9H8a1 1 0 0 0-.707 1.707l4 4a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0 .217-1.09z"
+                style="fill: #4a80f5"
+                data-name="Down"
+              />
+            </svg>
+          </span>
+        </button>
+        <div class="options-content">
+          <span class="see-more">See more options</span>
+          <button class="btn btn--options invisible" id="See">
+            <span class="btn__visible"> See all workouts? </span>
+            <span class="btn__invisible"> List </span>
+          </button>
+          <div class="search-content">
+            <button class="btn btn--options invisible" id="Search">
+              <span class="btn__visible"> Search for a location? </span>
+              <span class="btn__invisible"> Enter the desired location </span>
+            </button>
+            <div
+              id="autocomplete"
+              class="autocomplete-container invisible"
+            ></div>
+          </div>
+
+          <button class="btn btn--options invisible" id="Return">
+            <span class="btn__visible"> Return to current location?</span>
+            <span class="btn__invisible"> Return </span>
+          </button>
+        </div>
+      </nav>
+      <form class="form hidden">
+        <div class="form__row form__row--hidden form-error">
+          Make sure to complete the form and pick a location. Some fields may be
+          incomplete or not accepted.
+        </div>
+        <fieldset class="form__row">
+          <label class="form__label" for="select">Type</label>
+          <select
+            class="form__input form__input--type"
+            name="select"
+            id="select"
+            disabled
+          >
+            <option value="running">Running</option>
+            <option value="cycling">Cycling</option>
+          </select>
+        </fieldset>
+        <fieldset class="form__row">
+          <label class="form__label" for="Distance">Distance</label>
+
+          <input
+            class="form__input form__input--distance"
+            placeholder="km"
+            required
+            type="number"
+            name="Distance"
+            id="inputDistance"
+            onblur="app.formError(inputDistance)"
+          />
+
+          <span id="inputDistanceError" class="input-error display-none"
+            >Your input is not a number!</span
+          >
+        </fieldset>
+        <fieldset class="form__row">
+          <label class="form__label" for="Duration">Duration</label>
+          <input
+            class="form__input form__input--duration"
+            placeholder="min"
+            required
+            type="number"
+            name="Duration"
+            id="inputDuration"
+            onblur="app.formError(inputDuration)"
+          />
+          <span id="inputDurationError" class="input-error display-none"
+            >Your input is not a number!</span
+          >
+        </fieldset>
+        <fieldset class="form__row">
+          <label class="form__label" for="Cadence">Cadence</label>
+          <input
+            class="form__input form__input--cadence"
+            placeholder="step/min"
+            required
+            type="number"
+            name="Cadence"
+            id="inputCadence"
+            onblur="app.formError(inputCadence)"
+          />
+          <span id="inputCadenceError" class="input-error display-none"
+            >Your input is not a number!</span
+          >
+        </fieldset>
+        <fieldset class="form__row form__row--hidden">
+          <label class="form__label">Elev Gain</label>
+          <input
+            class="form__input form__input--elevation"
+            placeholder="meters"
+            required
+            type="number"
+            name="Elevation"
+            id="inputElevation"
+            onblur="app.formError(inputElevation)"
+          />
+          <span id="inputElevationError" class="input-error display-none"
+            >Your input is not a number!</span
+          >
+        </fieldset>
+        <button type="submit" class="btn btn--form btn--submit">
+          <span class="btn__visible"> Create a new workout </span>
+          <span class="btn__invisible"> Submit </span>
+        </button>
+        <button class="btn btn--form btn--edit display-none">
+          <span class="btn__visible"> Edit your workout </span>
+          <span class="btn__invisible"> Confirm </span>
+        </button>
+      </form>
+      <div class="sidebar">
+        <ul class="workouts">
+          <!-- <li class="workout workout--running" data-id="1234567890">
+            <div class="workout__options">
+              <ion-icon
+                name="close-circle-outline"
+                class="workout__btn workout__btn--delete"
+              ></ion-icon>
+              <h2 class="workout__title">Cycling on April 5</h2>
+
+              <ion-icon
+                name="create-outline"
+                class="workout__btn workout__btn--edit"
+              ></ion-icon>
+
+              <ion-icon
+                name="chevron-down-circle-outline"
+                class="workout__btn workout__btn--maximize"
+              ></ion-icon>
+            </div>
+            <div class="workout__details">
+              <span class="workout__icon">🏃‍♂️</span>
+              <span class="workout__value">5.2</span>
+              <span class="workout__unit">km</span>
+            </div>
+            <div class="workout__details">
+              <span class="workout__icon">⏱</span>
+              <span class="workout__value">24</span>
+              <span class="workout__unit">min</span>
+            </div>
+            <div class="workout__details">
+              <span class="workout__icon">⚡️</span>
+              <span class="workout__value">4.6</span>
+              <span class="workout__unit">min/km</span>
+            </div>
+            <div class="workout__details">
+              <span class="workout__icon">🦶🏼</span>
+              <span class="workout__value">178</span>
+              <span class="workout__unit">spm</span>
+            </div>
+            <div class="workout__weather invisible display-none">
+              <div class="workout__weather__box">
+                <ion-icon class="weather-icon" name="sunny-outline"></ion-icon>
+                <span class="temperature small-mr celsius">20&deg;C</span>
+                <span class="temperature small-mr fahrenheit invisible"
+                  >68&deg;F</span
+                >
+              </div>
+
+              <div class="workout__weather__box">
+                <ion-icon class="weather-icon" name="water-outline"></ion-icon>
+                <span class="humidity small-mr">Humidity = 49</span>
+              </div>
+              <div class="workout__weather__box">
+                <ion-icon
+                  class="weather-icon"
+                  name="glasses-outline"
+                ></ion-icon>
+                <span class="uv small-mr">UV = 5</span>
+              </div>
+            </div>
+          </li>
+
+          <li class="workout workout--cycling" data-id="1234567891">
+            <div class="workout__options">
+              <ion-icon
+                name="close-circle-outline"
+                class="workout__btn workout__btn--delete"
+              ></ion-icon>
+              <h2 class="workout__title">Cycling on April 5</h2>
+
+              <ion-icon
+                name="create-outline"
+                class="workout__btn workout__btn--edit"
+              ></ion-icon>
+
+              <ion-icon
+                name="chevron-down-circle-outline"
+                class="workout__btn workout__btn--maximize"
+              ></ion-icon>
+            </div>
+
+            <div class="workout__details">
+              <span class="workout__icon">🚴‍♀️</span>
+              <span class="workout__value">27</span>
+              <span class="workout__unit">km</span>
+            </div>
+            <div class="workout__details">
+              <span class="workout__icon">⏱</span>
+              <span class="workout__value">95</span>
+              <span class="workout__unit">min</span>
+            </div>
+            <div class="workout__details">
+              <span class="workout__icon">⚡️</span>
+              <span class="workout__value">16</span>
+              <span class="workout__unit">km/h</span>
+            </div>
+            <div class="workout__details">
+              <span class="workout__icon">⛰</span>
+              <span class="workout__value">223</span>
+              <span class="workout__unit">m</span>
+            </div>
+            <div class="workout__weather invisible display-none">
+              <div class="workout__weather__box">
+                <ion-icon class="weather-icon" name="sunny-outline"></ion-icon>
+                <span class="temperature small-mr celsius">20&deg;C</span>
+                <span class="temperature small-mr fahrenheit invisible"
+                  >68&deg;F</span
+                >
+              </div>
+
+              <div class="workout__weather__box">
+                <ion-icon class="weather-icon" name="water-outline"></ion-icon>
+                <span class="humidity small-mr">Humidity = 49</span>
+              </div>
+              <div class="workout__weather__box">
+                <ion-icon
+                  class="weather-icon"
+                  name="glasses-outline"
+                ></ion-icon>
+                <span class="uv small-mr">UV = 5</span>
+              </div>
+            </div>
+          </li> -->
+        </ul>
+
+        <!-- <p class="copyright">
+          &copy; Copyright by
+          <a
+            class="twitter-link"
+            target="_blank"
+            href="https://twitter.com/StoicaRobert"
+            >Stoica Robert</a
+          >. Use for learning or your portfolio. Don't use to teach. Don't claim
+        </p> -->
+        <button class="btn btn--delete-all big-mt" id="Delete">
+          <span class="btn__visible"> Delete all workouts? </span>
+          <span class="btn__invisible"> Confirm </span>
+        </button>
+      </div>
+      <div id="map"></div>
+      <div class="bottom">
+        <div class="bottom__content">
+          <div class="location-container center">
+            Current weather in:
+            <span class="location__name"> </span>
+          </div>
+          <div class="weather-container">
+            <div class="weather__box center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 128 128"
+                style="enable-background: new 0 0 128 128"
+                xml:space="preserve"
+                class="weather-icon"
+                name="sunny-outline"
+              >
+                <circle
+                  cx="62.265"
+                  cy="91.408"
+                  r="23.015"
+                  style="fill: #f78e61"
+                />
+                <path
+                  style="fill: #f18d00"
+                  d="M63.725 67.007V15.829a1.46 1.46 0 0 0-2.92 0v51.178C47.99 67.769 37.79 78.405 37.79 91.408c0 13.495 10.979 24.475 24.474 24.475 13.496 0 24.475-10.979 24.475-24.475.001-13.003-10.199-23.639-23.014-24.401zm-1.46 45.955c-11.885 0-21.554-9.669-21.554-21.554s9.669-21.554 21.554-21.554S83.82 79.522 83.82 91.408s-9.67 21.554-21.555 21.554zm17.533-53.64V17.533C79.798 7.865 71.933 0 62.265 0S44.731 7.865 44.731 17.533v41.79C32.94 65.761 25.673 77.932 25.673 91.408c0 20.177 16.415 36.592 36.592 36.592 20.178 0 36.593-16.415 36.593-36.592 0-13.476-7.269-25.647-19.06-32.086zM62.265 123.62c-17.761 0-32.212-14.451-32.212-32.212 0-12.261 6.839-23.296 17.848-28.799l1.211-.605v-44.47c0-7.253 5.9-13.153 13.153-13.153s13.153 5.9 13.153 13.153v44.469l1.211.605c11.01 5.504 17.849 16.54 17.849 28.8-.001 17.761-14.451 32.212-32.213 32.212zM83.82 23.784c0-.806.654-1.46 1.46-1.46h15.588a1.46 1.46 0 0 1 0 2.92H85.28a1.459 1.459 0 0 1-1.46-1.46zm18.507 8.524a1.46 1.46 0 0 1-1.46 1.46H85.28a1.46 1.46 0 0 1 0-2.92h15.588a1.46 1.46 0 0 1 1.459 1.46zm0 17.048a1.46 1.46 0 0 1-1.46 1.46H85.28a1.46 1.46 0 0 1 0-2.92h15.588a1.46 1.46 0 0 1 1.459 1.46zm0-8.524a1.46 1.46 0 0 1-1.46 1.46H85.28a1.46 1.46 0 0 1 0-2.92h15.588a1.46 1.46 0 0 1 1.459 1.46z"
+                />
+              </svg>
+              <span class="temperature small-mr celsius">20&deg;C</span>
+              <span class="temperature small-mr fahrenheit invisible"
+                >68&deg;F</span
+              >
+              <span class="message">Normal climate </span>
+
+              <div class="weather__details invisible">
+                <div class="weather__details__box">
+                  <span class="weather__details__title"> Temperature? </span>
+                  <p class="weather__details__text">
+                    &bull;Measure of hotness or coldness expressed in terms of
+                    any of several arbitrary scales and indicating the direction
+                    in which heat energy will spontaneously flow—i.e., from a
+                    hotter body (one at a higher temperature) to a colder body
+                    (one at a lower temperature).
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="weather__box center">
+              <svg
+                class="weather-icon"
+                aria-hidden="true"
+                name="sunny-outline"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M13 3a1 1 0 1 0-2 0v2a1 1 0 1 0 2 0V3ZM6.343 4.929A1 1 0 0 0 4.93 6.343l1.414 1.414a1 1 0 0 0 1.414-1.414L6.343 4.929Zm12.728 1.414a1 1 0 0 0-1.414-1.414l-1.414 1.414a1 1 0 0 0 1.414 1.414l1.414-1.414ZM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm-9 4a1 1 0 1 0 0 2h2a1 1 0 1 0 0-2H3Zm16 0a1 1 0 1 0 0 2h2a1 1 0 1 0 0-2h-2ZM7.757 17.657a1 1 0 1 0-1.414-1.414l-1.414 1.414a1 1 0 1 0 1.414 1.414l1.414-1.414Zm9.9-1.414a1 1 0 0 0-1.414 1.414l1.414 1.414a1 1 0 0 0 1.414-1.414l-1.414-1.414ZM13 19a1 1 0 1 0-2 0v2a1 1 0 1 0 2 0v-2Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span class="temperature celsius small-mr">20&deg;C</span>
+              <span class="temperature small-mr fahrenheit invisible"
+                >68&deg;F</span
+              >
+              <span class="message"> Feeling like </span>
+              <span class="message"></span>
+              <div class="weather__details invisible">
+                <div class="weather__details__box">
+                  <span class="weather__details__title"> Feeling? </span>
+                  <p class="weather__details__text">
+                    &bull;The "feels like" temperature is a measurement of how
+                    hot or cold it really feels like outside.
+                    <br />
+                    &bull;The “Feels Like” temperature relies on environmental
+                    data including the ambient air temperature, relative
+                    humidity, and wind speed to determine how weather conditions
+                    feel to bare skin.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="weather__box center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                name="water-outline"
+                class="weather-icon"
+                viewBox="0 0 200 200"
+                xml:space="preserve"
+              >
+                <path
+                  fill="currentColor"
+                  d="M100.382 157.898c-20.1 0-36.4-17.1-36.4-38.2 0-24.4 32.7-75.5 33-76 .4-.6 1.4-2.2 3.2-2.2h.4c1.7 0 2.6.9 3.1 1.7.3.5 33 52.1 32.9 76.6 0 21-16.3 38.1-36.2 38.1zm.1-112.3c-.1.1-.1.2-.2.3-.3.5-32.3 50.9-32.3 73.8 0 18.9 14.5 34.2 32.3 34.2h.1c17.8 0 32.2-15.3 32.3-34.1 0-19.2-23-59.8-32.2-74.2z"
+                />
+                <path
+                  fill="currentColor"
+                  d="M83.282 134.998c-.7 0-1.5-.4-1.8-1.1-2.3-4.9-3.5-10.2-3.5-15.7 0-13.3 10.4-35.2 19.2-51.2.5-1 1.7-1.3 2.7-.8s1.3 1.7.8 2.7c-12.2 22.3-18.7 39.4-18.7 49.3 0 5 1.1 9.6 3.1 13.9.5 1 .1 2.2-.9 2.7-.3.1-.6.2-.9.2z"
+                />
+              </svg>
+              <span class="humidity small-mr">Humidity = 49</span>
+              <span class="message">Very good for lungs</span>
+              <div class="weather__details invisible">
+                <div class="weather__details__box">
+                  <span class="weather__details__title"> Humidity? </span>
+                  <p class="weather__details__text">
+                    &bull;Humidity is a natural part of our atmosphere, it comes
+                    from the amount of water vapor in the air. Water vapor
+                    enters the atmosphere by evaporating from the large bodies
+                    of water on the Earth’s surface including lakes, oceans, and
+                    seas.
+                    <br />
+                    &bull;Colder climates often have lower humidity levels than
+                    warmer climates as colder air holds less moisture than warm
+                    air. In winter, humidity levels tend to be typically lower.
+                    Whereas in summer, humidity levels will be higher, as air
+                    can hold more water vapor at a higher temperature
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="weather__box center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="weather-icon"
+                xml:space="preserve"
+                name="glasses-outline"
+                style="
+                  shape-rendering: geometricPrecision;
+                  text-rendering: geometricPrecision;
+                  image-rendering: optimizeQuality;
+                  fill-rule: evenodd;
+                  clip-rule: evenodd;
+                "
+                viewBox="0 0 6.827 6.827"
+              >
+                <defs>
+                  <style>
+                    .str0 {
+                      stroke: currentColor;
+                      stroke-width: 0.213335;
+                      stroke-linecap: round;
+                      stroke-linejoin: round;
+                    }
+                    .fil0 {
+                      fill: none;
+                    }
+                  </style>
+                </defs>
+                <g id="Layer_x0020_1">
+                  <g id="_436677232">
+                    <path
+                      id="_436677496"
+                      class="fil0 str0"
+                      d="m3.413 1.289 2.454 4.249H.96z"
+                    />
+                    <path
+                      id="_436676488"
+                      class="fil0 str0"
+                      d="M2.453 5V3.6c0-.083.214-.165.32 0V5c.132.065.16.066.314 0V3.517c.106-.164.273-.11.326 0v1.4c.146.145.29.183.427 0l.113-.658h.427"
+                    />
+                    <path
+                      id="_436677160"
+                      class="fil0"
+                      style="stroke: currentColor; stroke-width: 0.213335"
+                      d="m4.16 4.693.427-.426-.427-.427"
+                    />
+                  </g>
+                </g>
+                <path class="fil0" d="M0 0h6.827v6.827H0z" />
+              </svg>
+              <span class="uv small-mr">UV = 5</span>
+              <span class="message">Evitate going out in intervals: 5-10</span>
+              <div class="weather__details invisible">
+                <div class="weather__details__box">
+                  <span class="weather__details__title"> UV? </span>
+                  <p class="weather__details__text">
+                    &bull;Ultraviolet (UV) radiation is a type of energy
+                    produced by the sun and some artificial sources, such as arc
+                    welders and solariums. <br />&bull;The sun’s UV is the main
+                    cause of skin cancer. Too much UV exposure also causes
+                    sunburn, tanning, premature ageing and eye damage. You can
+                    see the sun’s light. <br />
+                    &bull;You can feel the sun’s heat. But you can’t see or feel
+                    the sun’s UV radiation. UV can reach you directly from the
+                    sun. It can also be reflected off different surfaces and
+                    scattered by particles in the air.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="logo-box">
+            <img src="logo.png" alt="Logo" class="logo" />
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
