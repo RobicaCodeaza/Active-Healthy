@@ -315,7 +315,7 @@ class App {
     try {
       // console.log('GET WEATHER----');
       const data = await fetch(
-        `http://api.weatherapi.com/v1/current.json?key=e87060d85dc945baacc143739232808&q=${latitude},${longitude}&aqi=no`
+        `https://api.weatherapi.com/v1/current.json?key=e87060d85dc945baacc143739232808&q=${latitude},${longitude}&aqi=no`
       );
       // if (!data.ok) throw new Error(`Problem with geocoding - ${data.status}`);
 
