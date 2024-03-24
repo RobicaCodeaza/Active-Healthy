@@ -1058,6 +1058,12 @@ class App {
           .querySelector('.sidebar')
           .addEventListener('click', functionalityWorkout.bind(this));
       }
+      if (this.#workouts.length === 0 && e.target.closest('#See')) {
+        const messageError = `
+        <span class="modal-error__message__code">You don't have any workouts added</span>. Click on the map and add yours.`;
+        this.openModal(messageError);
+        // console.log('nothing to show');
+      }
       if (e.target.closest('#Search')) {
         autocompleteContainer.classList.toggle('active');
         autocompleteContainer.classList.toggle('invisible');
