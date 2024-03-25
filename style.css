@@ -334,6 +334,7 @@ span {
   box-shadow: 0 1rem 2rem 0 rgba(241, 141, 0, 0.25);
 }
 .bottom__content {
+  position: relative;
   display: flex;
   align-items: center;
   padding: 1rem 3rem;
@@ -357,7 +358,7 @@ span {
   font-style: italic;
 }
 .weather__box {
-  position: relative;
+  /* position: relative; */
   padding: 1rem;
   padding-right: 3.2rem;
   height: 100%;
@@ -366,6 +367,7 @@ span {
 }
 .weather__box::before {
   content: '';
+
   position: absolute;
   bottom: 0;
   left: 0;
@@ -374,6 +376,8 @@ span {
   transform: scaleY(0);
   height: 0.3rem;
   transition: transform 0.2s, height 0.4s cubic-bezier(1, 0, 0, 1) 0.2s;
+  /* border: 1px solid var(--color-font);
+  border-radius: 1.2rem; */
 }
 .weather__box:hover::before {
   transform: scaleY(1);
@@ -437,18 +441,22 @@ span {
 }
 
 .weather__details {
-  position: absolute;
+  position: fixed;
   text-align: left;
-  width: 100%;
-  left: -1px;
-  top: 0;
+  /* width: 100%; */
+  padding: 1rem 2rem;
+  left: calc(50vw - 37.5vw);
+  top: calc(50vh - 25rem);
+  width: 65vw;
   color: var(--color-accent);
   font-style: normal;
-  background-color: var(--color-font);
-  transform: translateY(-100%) scaleY(0);
+  background-color: var(--color-primary-dark--2);
+  transform: scaleY(0);
   max-height: 0.3rem;
-  transition: transform 0.2s 0.4s, max-height 0.4s cubic-bezier(1, 0, 0, 1) 0.6s,
-    visibility 0.4s 0.6s;
+  transition: transform 0.4s 1s, max-height 5s cubic-bezier(1, 0, 0, 1) 0.6s,
+    visibility 5s 0.6s, opacity 5s 0.5s;
+  border: 1px solid var(--color-primary-dark--1);
+  border-radius: 1.2rem;
 }
 .weather__details__box {
   padding: 2rem 1rem;
@@ -464,13 +472,13 @@ span {
 
 .weather__details__text {
   font-size: 1.6rem;
-  color: var(--color-dark--2);
+  color: var(--color-primary-light--1);
   letter-spacing: 0.25px;
   font-weight: 500;
 }
 .active.weather__details {
-  max-height: 50rem;
-  transform: translateY(-100%) scaleY(1);
+  max-height: max-content;
+  transform: scaleY(1);
   visibility: visible;
   pointer-events: auto;
   opacity: 1;
