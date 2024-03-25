@@ -445,7 +445,7 @@ span {
   text-align: left;
   /* width: 100%; */
   padding: 1rem 2rem;
-  left: calc(50vw - 37.5vw);
+  left: calc(50vw - 27.5vw);
   top: calc(50vh - 25rem);
   width: 65vw;
   color: var(--color-accent);

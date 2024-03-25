@@ -173,14 +173,14 @@ class App {
   #markers = [];
   #currentWorkoutObj;
   #currentWorkoutHtml;
-  #totalFormErrors = {
-    inputDistance: -1,
-    inputDuration: -1,
-    inputCadence: -1,
-    inputElevation: -1,
-  };
 
   constructor() {
+    this.totalFormErrors = {
+      inputDistance: -1,
+      inputDuration: -1,
+      inputCadence: -1,
+      inputElevation: -1,
+    };
     this._getPosition();
     // Functionality
     this._functionality();
@@ -193,7 +193,7 @@ class App {
 
     btnSubmit.addEventListener('click', this._newWorkout.bind(this));
     // btnEdit.addEventListener('click', this._editWorkout.bind(this));
-    btnEdit.addEventListener('click', e => {
+    btnEdit.addEventListener('click', (e) => {
       this._editWorkout(e);
     });
     // Input type event listener
@@ -225,14 +225,14 @@ class App {
     });
 
     // Weather informations handler
-    weatherContainer.querySelectorAll('.weather__box').forEach(el =>
+    weatherContainer.querySelectorAll('.weather__box').forEach((el) =>
       el.addEventListener('mouseover', function (e) {
         const weatherDetails = el.querySelector('.weather__details');
         weatherDetails?.classList.remove('invisible');
         weatherDetails?.classList.add('active');
       })
     );
-    weatherContainer.querySelectorAll('.weather__box').forEach(el =>
+    weatherContainer.querySelectorAll('.weather__box').forEach((el) =>
       el.addEventListener('mouseleave', function (e) {
         const weatherDetails = el.querySelector('.weather__details');
         weatherDetails?.classList.remove('active');
@@ -300,7 +300,7 @@ class App {
 
     // Using map variable to add event listeners in order to render workout on map
 
-    this.#map.on('click', e => {
+    this.#map.on('click', (e) => {
       inputType.removeAttribute('disabled');
       this._showForm(e);
     });
@@ -308,7 +308,7 @@ class App {
     this._renderCurrWeather.bind(this)(latitude, longitude);
 
     // Showing markers after loading map - MARKERS FROM LOCAL STORAGE
-    this.#workouts.forEach(work => {
+    this.#workouts.forEach((work) => {
       this._renderWorkoutMarker(work, false);
     });
   }
@@ -424,12 +424,12 @@ class App {
     formError.classList.add('form__row--hidden');
     formError.classList.remove('visible');
     formError.style.animation = '';
-    this.#totalFormErrors.inputDistance = defaultValue;
-    this.#totalFormErrors.inputDuration = defaultValue;
-    if (type === 'running') this.#totalFormErrors.inputCadence = defaultValue;
-    else this.#totalFormErrors.inputCadence = -1;
-    if (type === 'cycling') this.#totalFormErrors.inputElevation = defaultValue;
-    else this.#totalFormErrors.inputElevation = -1;
+    this.totalFormErrors.inputDistance = defaultValue;
+    this.totalFormErrors.inputDuration = defaultValue;
+    if (type === 'running') this.totalFormErrors.inputCadence = defaultValue;
+    else this.totalFormErrors.inputCadence = -1;
+    if (type === 'cycling') this.totalFormErrors.inputElevation = defaultValue;
+    else this.totalFormErrors.inputElevation = -1;
   }
   _resetValuesForm(defaultSelect = 'running') {
     inputType.value = defaultSelect;
@@ -472,20 +472,20 @@ class App {
   }
   validInputs(...inputs) {
     // console.log(inputs);
-    return inputs.every(inp => Number.isFinite(+inp));
+    return inputs.every((inp) => Number.isFinite(+inp));
   }
   allPozitive(...inputs) {
-    return inputs.every(inp => inp > 0);
+    return inputs.every((inp) => inp > 0);
   }
   validationInputs() {
-    // console.log(this.#totalFormErrors);
+    // console.log(this.totalFormErrors);
 
-    if (Object.values(this.#totalFormErrors).some(error => error === 1)) {
+    if (Object.values(this.totalFormErrors).some((error) => error === 1)) {
       return false;
     }
 
     if (
-      Object.values(this.#totalFormErrors).reduce(function (sum, error) {
+      Object.values(this.totalFormErrors).reduce(function (sum, error) {
         if (error === 0) {
           return sum + 1;
         } else return sum;
@@ -555,7 +555,7 @@ class App {
         console.log(this);
         return;
       }
-      // console.log(this.#totalFormErrors);
+      // console.log(this.totalFormErrors);
       workout = new Running(
         [lat, lng],
         weatherObj.location.region,
@@ -818,13 +818,13 @@ class App {
     if (!workoutEl) return; // guard clause again
 
     const workout = this.#workouts.find(
-      work => work.id === Number(workoutEl.dataset.id)
+      (work) => work.id === Number(workoutEl.dataset.id)
     );
 
     const [lat, lng] = workout.coords;
 
     this.#markers
-      .find(marker => {
+      .find((marker) => {
         const { lat: latMarker, lng: lngMarker } = marker._latlng;
         if (lat === latMarker && lng === lngMarker) return marker;
       })
@@ -841,7 +841,7 @@ class App {
 
     if (!data) return; //again guard clause
 
-    data.forEach(dataWorkout => {
+    data.forEach((dataWorkout) => {
       const workout =
         dataWorkout.type === 'running'
           ? new Running(
@@ -872,7 +872,7 @@ class App {
     });
 
     // Restoring our workout array because we need that data
-    this.#workouts.forEach(work => {
+    this.#workouts.forEach((work) => {
       this._renderWorkout(work, 'new');
       // this._renderWorkoutMarker(work); // This will not work because map is not rendered
     });
@@ -885,7 +885,7 @@ class App {
       {}
     );
     let coordsNew;
-    autocompleteInput.on('select', location => {
+    autocompleteInput.on('select', (location) => {
       // check selected location here
       const inputVal = document.querySelector(
         '.geoapify-autocomplete-input'
@@ -959,7 +959,7 @@ class App {
       }
       if (e.target.classList.contains('workout__btn--edit')) {
         const workoutObj = this.#workouts.find(
-          work => work.id === Number(workout.dataset.id)
+          (work) => work.id === Number(workout.dataset.id)
         );
         btnEdit.classList.remove('display-none');
         btnSubmit.classList.add('display-none');
@@ -993,13 +993,13 @@ class App {
       }
       if (e.target.classList.contains('workout__btn--delete')) {
         const workoutObj = this.#workouts.find(
-          work => work.id === Number(workout.dataset.id)
+          (work) => work.id === Number(workout.dataset.id)
         );
         const workoutIndex = this.#workouts.findIndex(
-          work => work.id === Number(workout.dataset.id)
+          (work) => work.id === Number(workout.dataset.id)
         );
         const markerObj = this.#markers.find(
-          marker =>
+          (marker) =>
             marker._latlng.lat === workoutObj.coords[0] &&
             marker._latlng.lng === workoutObj.coords[1]
         );
@@ -1012,10 +1012,10 @@ class App {
         }
       }
       if (e.target.closest('.btn--delete-all')) {
-        document.querySelectorAll('.workout').forEach(work => work.remove());
+        document.querySelectorAll('.workout').forEach((work) => work.remove());
 
         this.#workouts = [];
-        this.#markers.forEach(marker => this.#map.removeLayer(marker));
+        this.#markers.forEach((marker) => this.#map.removeLayer(marker));
         this.reset();
         sidebar.classList.toggle('active');
       }
@@ -1034,7 +1034,7 @@ class App {
 
       // IMPLEMENTING BAR
       seeMore.classList.toggle('invisible');
-      document.querySelectorAll('.btn--options').forEach(btn => {
+      document.querySelectorAll('.btn--options').forEach((btn) => {
         btn.classList.toggle('invisible');
         btn.classList.toggle('active');
       });
@@ -1077,7 +1077,7 @@ class App {
     };
 
     // IMPLEMENTATION WHEN BUTTON FOLLOWS CURSOR WHEN ENETERED navbar
-    navBar.addEventListener('mousemove', e => {
+    navBar.addEventListener('mousemove', (e) => {
       if (!clicked) {
         e.preventDefault();
         const distanceX = e.clientX - movingBtnCoords;
@@ -1102,28 +1102,30 @@ class App {
     window.addEventListener('resize', calcSidebarDimensions);
   }
   formError(x) {
-    let value = +x.value;
-    const errorMsg = document.getElementById(x.id + 'Error');
+    console.log(this.totalFormErrors);
+    let value = +x.target.value;
+    const errorMsg = document.getElementById(x.target.id + 'Error');
 
-    if (x.name === 'Elevation') value = Math.abs(value);
+    if (x.target.name === 'Elevation') value = Math.abs(value);
     if (!Number.isFinite(value) || value <= 0) {
-      // console.log(x.id + 'Error');
+      // console.log(x.target.id + 'Error');
       errorMsg?.classList.remove('display-none');
       setTimeout(() => {
         errorMsg?.classList.add('active');
       }, 100);
 
-      this.#totalFormErrors[x.id] = 1;
+      this.totalFormErrors[x.target.id] = 1;
     } else {
       errorMsg?.classList.remove('active');
       setTimeout(() => {
         errorMsg?.classList.add('display-none');
       }, 300);
-      this.#totalFormErrors[x.id] = 0;
-    }
+      console.log(this.totalFormErrors);
 
+      this.totalFormErrors[x.target.id] = 0;
+    }
     if (
-      Object.values(this.#totalFormErrors).reduce(function (sum, error) {
+      Object.values(this.totalFormErrors).reduce(function (sum, error) {
         if (error === 0) {
           return sum + 1;
         } else return sum;
@@ -1157,4 +1159,11 @@ class App {
 }
 
 const app = new App();
+(function handleBlur() {
+  inputCadence.addEventListener('blur', app.formError.bind(app));
+  inputDistance.addEventListener('blur', app.formError.bind(app));
+  inputDuration.addEventListener('blur', app.formError.bind(app));
+  inputElevation.addEventListener('blur', app.formError.bind(app));
+})();
+
 // ----------------------------

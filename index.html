@@ -146,9 +146,7 @@
             type="number"
             name="Distance"
             id="inputDistance"
-            onblur="if
-          (typeof app !== 'undefined' && app.formError) app.formError(this);
-          else console.error('app or formError is undefined')"
+            onblur="console.log(app)"
           />
 
           <span id="inputDistanceError" class="input-error display-none"
@@ -164,9 +162,6 @@
             type="number"
             name="Duration"
             id="inputDuration"
-            onblur="if
-            (typeof app !== 'undefined' && app.formError) app.formError(this);
-            else console.error('app or formError is undefined')"
           />
           <span id="inputDurationError" class="input-error display-none"
             >Your input is not a number!</span
@@ -181,9 +176,6 @@
             type="number"
             name="Cadence"
             id="inputCadence"
-            onblur="if
-            (typeof app !== 'undefined' && app.formError) app.formError(this);
-            else console.error('app or formError is undefined')"
           />
           <span id="inputCadenceError" class="input-error display-none"
             >Your input is not a number!</span
@@ -198,9 +190,6 @@
             type="number"
             name="Elevation"
             id="inputElevation"
-            onblur="if
-            (typeof app !== 'undefined' && app.formError) app.formError(this);
-            else console.error('app or formError is undefined')"
           />
           <span id="inputElevationError" class="input-error display-none"
             >Your input is not a number!</span
