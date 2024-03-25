@@ -139,10 +139,17 @@
         <fieldset class="form__row">
           <label class="form__label" for="Distance">Distance</label>
 
-          <input class="form__input form__input--distance" placeholder="km"
-          required type="number" name="Distance" id="inputDistance" onblur=""if
+          <input
+            class="form__input form__input--distance"
+            placeholder="km"
+            required
+            type="number"
+            name="Distance"
+            id="inputDistance"
+            onblur="if
           (typeof app !== 'undefined' && app.formError) app.formError(this);
-          else console.error('app or formError is undefined')"" />
+          else console.error('app or formError is undefined')"
+          />
 
           <span id="inputDistanceError" class="input-error display-none"
             >Your input is not a number!</span
@@ -157,7 +164,9 @@
             type="number"
             name="Duration"
             id="inputDuration"
-            onblur="app.formError(this)"
+            onblur="if
+            (typeof app !== 'undefined' && app.formError) app.formError(this);
+            else console.error('app or formError is undefined')"
           />
           <span id="inputDurationError" class="input-error display-none"
             >Your input is not a number!</span
@@ -172,7 +181,9 @@
             type="number"
             name="Cadence"
             id="inputCadence"
-            onblur="app.formError(this)"
+            onblur="if
+            (typeof app !== 'undefined' && app.formError) app.formError(this);
+            else console.error('app or formError is undefined')"
           />
           <span id="inputCadenceError" class="input-error display-none"
             >Your input is not a number!</span
@@ -187,7 +198,9 @@
             type="number"
             name="Elevation"
             id="inputElevation"
-            onblur="app.formError(this)"
+            onblur="if
+            (typeof app !== 'undefined' && app.formError) app.formError(this);
+            else console.error('app or formError is undefined')"
           />
           <span id="inputElevationError" class="input-error display-none"
             >Your input is not a number!</span
