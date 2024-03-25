@@ -146,7 +146,7 @@
             type="number"
             name="Distance"
             id="inputDistance"
-            onblur="app.formError(inputDistance)"
+            onblur="handleBlur(inputDistance)"
           />
 
           <span id="inputDistanceError" class="input-error display-none"
@@ -162,7 +162,7 @@
             type="number"
             name="Duration"
             id="inputDuration"
-            onblur="app.formError(inputDuration)"
+            onblur="handleBlur(inputDuration)"
           />
           <span id="inputDurationError" class="input-error display-none"
             >Your input is not a number!</span
@@ -177,7 +177,7 @@
             type="number"
             name="Cadence"
             id="inputCadence"
-            onblur="app.formError(inputCadence)"
+            onblur="handleBlur(inputCadence)"
           />
           <span id="inputCadenceError" class="input-error display-none"
             >Your input is not a number!</span
@@ -192,7 +192,7 @@
             type="number"
             name="Elevation"
             id="inputElevation"
-            onblur="app.formError(inputElevation)"
+            onblur="handleBlur(inputElevation)"
           />
           <span id="inputElevationError" class="input-error display-none"
             >Your input is not a number!</span
