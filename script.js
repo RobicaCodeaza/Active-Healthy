@@ -550,6 +550,7 @@ class App {
 
         // console.log(formError.style.animationPlayState);
 
+        console.log(this);
         return;
       }
       // console.log(this.#totalFormErrors);
@@ -595,7 +596,6 @@ class App {
     }
 
     // console.log('Entered submit');
-    console.log('this', this);
     this._resetTotalFormErrors.bind(this)();
 
     //Add new workout to object list
