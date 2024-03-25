@@ -449,7 +449,7 @@ class App {
   _showForm(mapE) {
     // Showing the form
     form.classList.remove('hidden');
-    // inputDistance.focus();
+    inputDistance.focus();
     form.style.animation = 'pulsate 1s linear ';
     // In order to have global variable available to form event listener
     this.#mapEvent = mapE;
