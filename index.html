@@ -46,6 +46,18 @@
     ></script>
 
     <script defer src="script.js"></script>
+    <script>
+      function handleBlur(input) {
+        // Access app variable and call formError function
+        if (typeof app !== 'undefined' && app.formError) {
+          app.formError(input);
+        } else {
+          console.error(
+            'app variable not defined or formError function is missing.'
+          );
+        }
+      }
+    </script>
     <!-- <script defer src="other.js"></script> -->
     <!-- Script.js has access to all the global variables in the other.js, so order matters -->
 
