@@ -523,8 +523,6 @@ class App {
     const distance = +inputDistance.value;
     const duration = +inputDuration.value;
 
-    console.log(type, distance, duration);
-
     const { lat, lng } = this.#mapEvent.latlng;
     let workout;
     const weatherObj = await this._getWeather(lat, lng);
@@ -568,7 +566,7 @@ class App {
         weather.humidity,
         weather.uv
       );
-      // console.log(workout);
+      console.log(workout);
     }
     if (type === 'cycling') {
       const elevation = +inputElevation.value;
@@ -597,6 +595,7 @@ class App {
     }
 
     // console.log('Entered submit');
+    console.log('this', this);
     this._resetTotalFormErrors.bind(this)();
 
     //Add new workout to object list
