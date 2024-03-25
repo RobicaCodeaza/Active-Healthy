@@ -523,6 +523,8 @@ class App {
     const distance = +inputDistance.value;
     const duration = +inputDuration.value;
 
+    console.log(type, distance, duration);
+
     const { lat, lng } = this.#mapEvent.latlng;
     let workout;
     const weatherObj = await this._getWeather(lat, lng);
