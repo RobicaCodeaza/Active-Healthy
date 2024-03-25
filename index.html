@@ -46,7 +46,7 @@
     ></script>
 
     <script defer src="script.js"></script>
-    <script>
+    <!-- <script>
       function handleBlur(input) {
         // Access app variable and call formError function
         if (typeof app !== 'undefined' && app.formError) {
@@ -57,7 +57,7 @@
           );
         }
       }
-    </script>
+    </script> -->
     <!-- <script defer src="other.js"></script> -->
     <!-- Script.js has access to all the global variables in the other.js, so order matters -->
 
@@ -146,7 +146,7 @@
             type="number"
             name="Distance"
             id="inputDistance"
-            onblur="handleBlur(inputDistance)"
+            onblur="app.formError(this)"
           />
 
           <span id="inputDistanceError" class="input-error display-none"
@@ -162,7 +162,7 @@
             type="number"
             name="Duration"
             id="inputDuration"
-            onblur="handleBlur(inputDuration)"
+            onblur="app.formError(this)"
           />
           <span id="inputDurationError" class="input-error display-none"
             >Your input is not a number!</span
@@ -177,7 +177,7 @@
             type="number"
             name="Cadence"
             id="inputCadence"
-            onblur="handleBlur(inputCadence)"
+            onblur="app.formError(this)"
           />
           <span id="inputCadenceError" class="input-error display-none"
             >Your input is not a number!</span
@@ -192,7 +192,7 @@
             type="number"
             name="Elevation"
             id="inputElevation"
-            onblur="handleBlur(inputElevation)"
+            onblur="app.formError(this)"
           />
           <span id="inputElevationError" class="input-error display-none"
             >Your input is not a number!</span

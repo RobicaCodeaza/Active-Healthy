@@ -190,6 +190,7 @@ class App {
 
     // FORM SECTION ------------------
     // Listenting to form submit and edit
+
     btnSubmit.addEventListener('click', this._newWorkout.bind(this));
     // btnEdit.addEventListener('click', this._editWorkout.bind(this));
     btnEdit.addEventListener('click', e => {
@@ -388,6 +389,7 @@ class App {
       throw err;
     }
   };
+
   _resetFormErrors() {
     document
       .getElementById(inputDistance.id + 'Error')
@@ -449,7 +451,7 @@ class App {
   _showForm(mapE) {
     // Showing the form
     form.classList.remove('hidden');
-    inputDistance.focus();
+    // inputDistance.focus();
     form.style.animation = 'pulsate 1s linear ';
     // In order to have global variable available to form event listener
     this.#mapEvent = mapE;
@@ -1106,15 +1108,16 @@ class App {
     if (x.name === 'Elevation') value = Math.abs(value);
     if (!Number.isFinite(value) || value <= 0) {
       // console.log(x.id + 'Error');
-      errorMsg.classList.remove('display-none');
+      errorMsg?.classList.remove('display-none');
       setTimeout(() => {
-        errorMsg.classList.add('active');
+        errorMsg?.classList.add('active');
       }, 100);
+
       this.#totalFormErrors[x.id] = 1;
     } else {
-      errorMsg.classList.remove('active');
+      errorMsg?.classList.remove('active');
       setTimeout(() => {
-        errorMsg.classList.add('display-none');
+        errorMsg?.classList.add('display-none');
       }, 300);
       this.#totalFormErrors[x.id] = 0;
     }
